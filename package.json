@@ -32,7 +32,6 @@
     "test-verbose": "jest --verbose",
     "server": "node ./src/server.js"
   },
-  
   "bin": {
     "stylusdb-cli": "node ./src/cli.js"
   },

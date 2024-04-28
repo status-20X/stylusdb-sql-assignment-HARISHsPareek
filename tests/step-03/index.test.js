@@ -1,10 +1,27 @@
-const parseQuery = require('../src/queryParser');
+const parseQuery = require('../../src/queryParser');
 
-test('Parse SQL Query', () => {
+test('Parse SQL Query successfully', () => {
     const query = 'SELECT id, name FROM sample';
     const parsed = parseQuery(query);
     expect(parsed).toEqual({
         fields: ['id', 'name'],
-        table: 'sample'
+        table: 'sample',
     });
+});
+
+test('Throw error on invalid SQL Query', () => {
+    const invalidQuery = 'SELECT * WHERE id = 1'; 
+
+    expect(() => {
+        parseQuery(invalidQuery);
+    }).toThrow(); 
+});
+
+
+test('Throw error with specific message', () => {
+    const invalidQuery = 'SELECT * WHERE id = 1';
+
+    expect(() => {
+        parseQuery(invalidQuery);
+    }).toThrow('Invalid query format'); 
 });
