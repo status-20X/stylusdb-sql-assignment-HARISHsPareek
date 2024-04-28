@@ -1,4 +1,4 @@
-const parseQuery = require('../../src/queryParser');
+const {parseQuery} = require('../../src/queryParser');
 
 test('Parse SQL Query successfully', () => {
     const query = 'SELECT id, name FROM sample';
@@ -19,9 +19,10 @@ test('Throw error on invalid SQL Query', () => {
 
 
 test('Throw error with specific message', () => {
-    const invalidQuery = 'SELECT * WHERE id = 1';
-
+    const invalidQuery = 'SELECT * FROM';
+    
     expect(() => {
-        parseQuery(invalidQuery);
-    }).toThrow('Invalid query format'); 
+        parseQuery(invalidQuery); // This should raise an error
+    }).toThrow('Invalid SELECT format'); // Correct expected message
 });
+

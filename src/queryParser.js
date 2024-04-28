@@ -1,39 +1,38 @@
 function parseQuery(query) {
+    // Trim the query to remove leading/trailing whitespaces
     query = query.trim();
 
-    // Parse JOIN information and remove it from the query
+    // Parse the JOIN clause and remove it from the main query
     const joinInfo = parseJoinClause(query);
     const joinPattern = /\s(INNER|LEFT|RIGHT) JOIN\s.+?\sON\s.+?=\s.+?/i;
     const queryWithoutJoin = query.replace(joinPattern, '');
 
-    // Parse SELECT and other clauses from the query without JOIN
+    // Split the query at the WHERE clause (if it exists)
     const whereSplit = queryWithoutJoin.split(/\sWHERE\s/i);
-    const mainQuery = whereSplit[0].trim(); // SELECT part
+    const mainQuery = whereSplit[0].trim(); // Everything before WHERE clause
     const whereClause = whereSplit.length > 1 ? whereSplit[1].trim() : null;
 
-    // Parse the SELECT part to extract fields and base table
+    // Parse the SELECT part to get the fields and table
     const selectRegex = /^SELECT\s(.+?)\sFROM\s(.+)/i;
     const selectMatch = mainQuery.match(selectRegex);
-
     if (!selectMatch) {
-        throw new Error('Invalid SELECT format');
+        throw new Error('Invalid SELECT format'); // Proper error handling
     }
 
-    const [, fields, table] = selectMatch; // Only base table name
+    const [, fields, table] = selectMatch;
 
-    // Parse WHERE clause if it exists
+    // Parse the WHERE part, if it exists
     const whereClauses = whereClause ? parseWhereClause(whereClause) : [];
 
     return {
-        fields: fields.split(',').map(f => f.trim()), // Correct parsing of fields
-        table: table.trim(), // Ensure correct base table name
-        whereClauses,
+        fields: fields.split(',').map(field => field.trim()), // Correct parsing of fields
+        table: table.trim(), // Ensure correct base table
+        whereClauses, // Correct parsing of WHERE clauses
         joinType: joinInfo.joinType,
         joinTable: joinInfo.joinTable,
         joinCondition: joinInfo.joinCondition,
     };
 }
-
 
 
 

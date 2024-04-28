@@ -25,7 +25,7 @@ async function executeSELECTQuery(query) {
             // Handle default case or unsupported JOIN types
         }
     }
-    const filteredData = whereClauses.length > 0
+    const filteredData = whereClauses
     ? data.filter(row => whereClauses.every(clause => evaluateCondition(row, clause)))
     : data;
     
